@@ -47,6 +47,6 @@
    "permissions": [ "identity", "identity.email", "background", "gcm", "storage", "webRequest", "webRequestBlocking", "notifications", "tabs", "clipboardRead", "clipboardWrite", "https://localhost:8080/", "http://localhost/", "https://joinjoaomgcd.appspot.com/", "https://accounts.google.com/o/oauth2/v2/auth/", "contextMenus", "geolocation", "activeTab" ],
    "short_name": "Join",
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.0.16",
+   "version": "1.0.18",
    "web_accessible_resources": [ "medium.png" ]
 }

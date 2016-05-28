@@ -14,7 +14,11 @@ var ChromeNotification = function(notificationFromGcm){
 		if(!getShowChromeNotifications()){
 			return;
 		}
-		if(!timeout)timeout = getNotificationSeconds() * 1000;
+		var timeoutFromSettings = getNotificationSeconds();
+		if(!timeout && timeoutFromSettings)
+		{
+			timeout = timeoutFromSettings * 1000;
+		}
 	    var imagesToDownload = [];
 	    imagesToDownload.push({"url":getDriveUrlFromFileId(this.notificationIcon ? this.notificationIcon : this.appIcon)});
 	    imagesToDownload.push({"url":getDriveUrlFromFileId(this.image)});
@@ -78,6 +82,9 @@ var ChromeNotification = function(notificationFromGcm){
 			    new Audio(notificationSound).play();
 			}
 		    if(timeout){
+		    	if(timeout > 8000){
+		    		options.priority = 2;
+		    	}
 		    	var storedTimeout = timeouts[me.id];
 		    	if(storedTimeout){
 		    		delete timeouts[me.id];

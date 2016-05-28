@@ -720,7 +720,6 @@ var defaultValues = {
     "autoclipboard":false,
     "autoclipboardnotification":true,
     "chromenotifications":true,
-    "notificationseconds":"8",
     "notificationwebsites":JSON.stringify(notificationPages,null,3),
     "prefixtaskercommands":false,
     "hidenotificationtext": false,
@@ -1251,6 +1250,7 @@ deviceImages[""+DEVICE_TYPE_CHROME_BROWSER]=function(device){return"chrome.png";
 deviceImages[""+DEVICE_TYPE_WIDNOWS_PC]=function(device){return"windows10.png";};
 deviceImages[""+DEVICE_TYPE_FIREFOX]=function(device){return"firefox.png";};
 deviceImages[""+DEVICE_TYPE_GROUP]=function(device){return device.deviceId.substring(6) + ".png"};
+deviceImages[""+DEVICE_TYPE_ANDROID_TV]=function(device){return "tv.png"};
 var devicesJson = localStorage["devices"];
 
 var devices = null;
@@ -1568,17 +1568,19 @@ var checkClipboardRecursive = function(){
             lastClipboard = clipboardData;
             var devicesToSendClipboard = getDeviceIdsToSendAutoClipboard();
             if(devicesToSendClipboard.length>0){
+                var gcmParams = {};
+                gcmParams[GCM_PARAM_TIME_TO_LIVE] = 0;
                 var params = {"deviceIds" : devicesToSendClipboard, "text":encrypt(clipboardData)};
                 var gcmAutoClipboard = new GCMAutoClipboard();
                 gcmAutoClipboard.text = params.text;
-                new DeviceIdsAndDirectDevices(devicesToSendClipboard).send(function(serverDeviceIds){
+                new DeviceIdsAndDirectDevices(devicesToSendClipboard).send(function(serverDeviceIds,callback, callbackError){
                     params.deviceIds = serverDeviceIds;
-                    doPostWithAuth(joinserver + "messaging/v1/sendAutoClipboard/",params, function(result){
+                    doPostWithAuth(joinserver + "messaging/v1/sendAutoClipboard/",params,callback, callbackError);
+                },gcmAutoClipboard,gcmParams, function(result){
                       console.log("Sent clipboard automatically: " + JSON.stringify(result));          
                     },function(error){
                         console.log("Error: " + error);           
-                    });
-                },gcmAutoClipboard);                
+                });                
             }
         }
     });

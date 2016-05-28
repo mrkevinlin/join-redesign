@@ -40,12 +40,17 @@ var doDirectGCMRequest = function(regId, gcmString, gcmType, gcmParams, callback
             content[prop] = gcmParams[prop];
         }
     }
+    content[GCM_PARAM_PRIORITY] = GCM_MESSAGE_PRIORITY_HIGH;
+    content[GCM_PARAM_DELAY_WHILE_IDLE] = false;
     var contentString = JSON.stringify(content);
     req.send(contentString);
 }
 
 var DeviceIdsAndDirectDevices = function(deviceIds){
 	var me = this;
+	if(typeof deviceIds == "string"){
+		deviceIds = deviceIds.split(",");
+	}
 	this.deviceIds = deviceIds;
 	this.serverDevices = [];
 	this.directDevices = [];
@@ -70,26 +75,38 @@ var DeviceIdsAndDirectDevices = function(deviceIds){
 	var devicesForId = devices.where(function(device){
 		return deviceIds.indexOf(device.deviceId) >= 0;
 	});
-	devicesForId.doForAll(function(deviceForId){
-		var devicesExpanded = me.convertGroupToDeviceIds(deviceForId);
-		devicesExpanded.doForAll(function(deviceForId){
-			if(deviceForId.regId2){
-				me.directDevices.removeIf(function(device){
-					return device.deviceId == deviceForId.deviceId;
-				});
-				me.directDevices.push(deviceForId);
-			}else{
-				me.serverDevices.removeIf(function(device){
-					return device.deviceId == deviceForId.deviceId;
-				});
-				me.serverDevices.push(deviceForId);
-			}
-		});		
-	});
+	if(devicesForId.length == 0){
+		if(deviceIds.length>0){
+			me.serverDevices.push({"deviceId":deviceIds[0]});
+		}
+	}else{
+		devicesForId.doForAll(function(deviceForId){
+			var devicesExpanded = me.convertGroupToDeviceIds(deviceForId);
+			devicesExpanded.doForAll(function(deviceForId){
+				if(deviceForId.regId2){
+					me.directDevices.removeIf(function(device){
+						return device.deviceId == deviceForId.deviceId;
+					});
+					me.directDevices.push(deviceForId);
+				}else{
+					me.serverDevices.removeIf(function(device){
+						return device.deviceId == deviceForId.deviceId;
+					});
+					me.serverDevices.push(deviceForId);
+				}
+			});		
+		});
+	}
 	
-	this.send = function(sendThroughServer, gcm, gcmParams){
+	this.callCallback = function(callback,data){
+		if(callback){
+			callback(data);
+		}
+	}
+	this.send = function(sendThroughServer, gcm, gcmParams,callback, callbackError){
 		if(!gcm){
 			return;
+			me.callCallback(callbackError,"No message to push");
 		}
 		var serverDevices = me.serverDevices;
 		var directDevices = me.directDevices;
@@ -109,17 +126,27 @@ var DeviceIdsAndDirectDevices = function(deviceIds){
 					var result = multicastResult.results[i];
 					me.handleGcmResult(device, result);
 				}
+				
+				if(serverDevices.length == 0){
+					me.callCallback(callback,result);
+				}
 
+	            console.log("Posted direct GCM");
+	            console.log(gcmString);
 	        },
 	        function(error){
 	        	var title = "Direct GCM error";
 	            console.log(title);
 	            console.log(error);
             	showNotification(title, error);
+            	
+				if(serverDevices.length == 0){
+					me.callCallback(callbackError,error);
+				}
 	        });
 		}
 		if(serverDevices.length > 0){
-			sendThroughServer(serverDevices.select(function(device){return device.deviceId;}));
+			sendThroughServer(serverDevices.select(function(device){return device.deviceId;}),callback,callbackError);
 		}
 	}
 	this.handleGcmResult = function(device, result){

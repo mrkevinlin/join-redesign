@@ -29,7 +29,13 @@ var DEVICE_TYPE_CHROME_BROWSER = 3;
 var DEVICE_TYPE_WIDNOWS_PC = 4;
 var DEVICE_TYPE_FIREFOX = 6;
 var DEVICE_TYPE_GROUP = 7;
+var DEVICE_TYPE_ANDROID_TV = 8;
 
+
+var GCM_PARAM_TIME_TO_LIVE = "time_to_live";
+var GCM_PARAM_PRIORITY = "priority";
+var GCM_MESSAGE_PRIORITY_HIGH = "high";
+var GCM_PARAM_DELAY_WHILE_IDLE = "delay_while_idle";
 
 var createNamespace =function(object, namespace){
     var names = namespace.split(".");
@@ -68,6 +74,7 @@ joindevices.groups.DeviceGroups = function(){
     this.deviceTypeGroups[DEVICE_TYPE_CHROME_BROWSER] = [DEVICE_GROUP_ALL,DEVICE_GROUP_CHROME,DEVICE_GROUP_PC];
     this.deviceTypeGroups[DEVICE_TYPE_WIDNOWS_PC] = [DEVICE_GROUP_ALL,DEVICE_GROUP_WINDOWS10,DEVICE_GROUP_PC];
     this.deviceTypeGroups[DEVICE_TYPE_FIREFOX] = [DEVICE_GROUP_ALL,DEVICE_GROUP_FIREFOX,DEVICE_GROUP_PC];
+    this.deviceTypeGroups[DEVICE_TYPE_ANDROID_TV] = [DEVICE_GROUP_ALL,DEVICE_GROUP_ANDROID];
     this.putDevicesIntoGroups = function(devices){
         //Group devices into groups
         for (var i = 0; i < this.allDeviceGroups.length; i++) {

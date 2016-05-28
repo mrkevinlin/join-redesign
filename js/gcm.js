@@ -46,12 +46,17 @@ var GCM = function(){
         params.senderId = localStorage.deviceId;
         params.id = guid();
         this.encrypt(params);
+        var gcmParams = {};
+        if(params.clipboard){
+            gcmParams[GCM_PARAM_TIME_TO_LIVE] = 0;
+        }
         var gcm = {"push":params};
         gcm.getCommunicationType = this.getCommunicationType;
-        new DeviceIdsAndDirectDevices(deviceId).send(function(deviceIds){
+        new DeviceIdsAndDirectDevices(deviceId).send(function(deviceIds,callback,callbackError){
             params.deviceId = null;
             params.deviceIds = deviceIds.join();
-            doPostWithAuth(joinserver + "messaging/v1/sendPush/",params, function(result){
+            doPostWithAuth(joinserver + "messaging/v1/sendPush/",params,callback,callbackError);
+        },gcm,gcmParams, function(result){
               console.log("Sent push: " + JSON.stringify(result)); 
               if(callback){
                 callback(result);
@@ -61,8 +66,7 @@ var GCM = function(){
                 if(callbackError){
                     callbackError(error);
                 }           
-            });
-        },gcm,{});
+        });
         
 
     }
@@ -306,15 +310,15 @@ var GCMGenericPush = function(){
         params.json = JSON.stringify(params);
         this.encrypt(params);
         params.getCommunicationType = this.getCommunicationType;
-        new DeviceIdsAndDirectDevices(deviceIds).send(function(deviceIds){
+        new DeviceIdsAndDirectDevices(deviceIds).send(function(deviceIds,callback, callbackError){
             params.deviceIds = deviceIds;
-            doPostWithAuth(joinserver + "messaging/v1/sendGenericPush/",params, function(result){
+            doPostWithAuth(joinserver + "messaging/v1/sendGenericPush/",params,callback, callbackError);
+
+        },params,{}, function(result){
               console.log("Sent generic push: " + JSON.stringify(result));          
             },function(error){
                 console.log("Error: " + error);           
-            });
-
-        },params);
+        });
         
     }
     this.encryptSpecific = function(gcm, password){
@@ -551,14 +555,14 @@ var GCMNotificationClear = function(){
         params.requestId = notification.id;
         var gcm = {"requestNotification":params,"getCommunicationType":this.getCommunicationType};
         
-        new DeviceIdsAndDirectDevices(params.deviceIds).send(function(deviceIdsServer){
+        new DeviceIdsAndDirectDevices(params.deviceIds).send(function(deviceIdsServer,callback, callbackError){
             params.deviceIds = deviceIdsServer;
-            doPostWithAuth(joinserver + "messaging/v1/clearNotification/",params, function(result){
+            doPostWithAuth(joinserver + "messaging/v1/clearNotification/",params,callback, callbackError);
+        },gcm,{}, function(result){
               console.log("Sent notification cancel: " + notification.id);          
             },function(error){
                 console.log("Error: " + error);           
-            });
-        },gcm);
+        });
 
     }
     this.clearAll = function() {
