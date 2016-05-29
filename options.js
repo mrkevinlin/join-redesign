@@ -163,6 +163,15 @@ var updatePasswordStatus = function(){
       passwordStatus.innerHTML = text;
 }
 document.addEventListener('DOMContentLoaded', function() {
+
+
+    var test = document.getElementById("resetcolorbutton");
+    test.onclick = function(){
+      // console.log(localStorage["customcolor"]);
+      localStorage["customcolor"] = back.getDefaultValue("customcolor");
+      document.getElementById("customcolor").value = localStorage["customcolor"];
+      // console.log(localStorage["customcolor"]);
+    }
     
     document.getElementById("appiconandname").onclick = function(){ openTab("http://joaoapps.com/join");};
     var optionTabSelectors = document.querySelectorAll("[showtab]");

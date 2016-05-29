@@ -619,6 +619,43 @@ var optionSavers = [
            }
 
         }
+    }, {
+        "type":"color",
+        "saveevent":"change",
+        "save": function(option){            
+            localStorage[option.id] = option.value;
+        },
+        "load":function(option){
+            option.value = this.getValue(option,getDefaultValue(option));
+            if(option.funcOnChange){
+                option.funcOnChange();
+            }
+        },
+        "getValue":function(option, defaultValue){
+            var id = null;
+            if(typeof option == "string"){
+                id = option;
+            }else{
+                id = option.id;
+            }
+            var value = localStorage[id];
+            if(isOptionUndefined(value)){
+                if(!defaultValue){
+                    defaultValue = "";
+                }
+                value = defaultValue;
+                this.save(id,defaultValue);
+            }
+            return value;
+        },"setDefaultValue" :function(option){
+            if(!option.value){
+               var defaultValue =  getDefaultValue(option);
+               if(!isOptionUndefined(defaultValue)){
+                   option.value = defaultValue;
+               }
+           }
+
+        }
     }
 ];
 
@@ -736,7 +773,7 @@ var defaultValues = {
     "prefixtaskercommands":false,
     "hidenotificationtext": false,
     "playnotificationsound": true,
-    "customcolor":false
+    "customcolor": "#FF9800"
 };
 
 /******************************************************************************/
