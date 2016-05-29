@@ -714,6 +714,9 @@ var decryptString = function(value, key256Bits){
 
 /***********************************************************/
 /*************************GENERIC***********************/
+// document.documentElement.style.setProperty('--global-color', 'red');
+console.log(back.get12HourFormat);
+
 var toClass = {}.toString;
 var openNewTab = function(url,options, callback){
     chrome.windows.getCurrent({ 'populate': false }, function(current) {

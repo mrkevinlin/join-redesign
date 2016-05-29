@@ -621,6 +621,7 @@ var optionSavers = [
         }
     }
 ];
+
 var getOptionSaver = function(option){
     for (var i = 0; i < optionSavers.length; i++) {
         var optionSaver = optionSavers[i];        
@@ -707,6 +708,9 @@ var getEventghostPort = function(){
 var getFavoriteCommandText = function(){
     return getOptionValue("text","text_favourite_command");
 }
+var getCustomColor = function(){
+    return getOptionValue("checkbox","customcolor");
+}
 var onautoclipboardsave = function(option, value){
     console.log("Auto clipboard: " + value);
     handleAutoClipboard();
@@ -731,8 +735,10 @@ var defaultValues = {
     "notificationnopopuppackages":"com.google.android.music",
     "prefixtaskercommands":false,
     "hidenotificationtext": false,
-    "playnotificationsound": true
+    "playnotificationsound": true,
+    "customcolor":false
 };
+
 /******************************************************************************/
 
 /*************************************************************************************/
