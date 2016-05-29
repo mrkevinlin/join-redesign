@@ -659,6 +659,9 @@ var getDownloadScreenshotsEnabled = function(){
 var getDownloadVideosEnabled = function(){
     return getOptionValue("checkbox","downloadvideos");
 }
+var get12HourFormat = function(){
+    return getOptionValue("checkbox","12hrformat");
+}
 var getAutoClipboard = function(){
     return getOptionValue("checkbox","autoclipboard");
 }
@@ -717,6 +720,7 @@ var getDefaultValue = function(option){
 var defaultValues = {
     "downloadscreenshots": true,
     "downloadvideos":false,
+    "12hrformat":false,
     "autoclipboard":false,
     "autoclipboardnotification":true,
     "chromenotifications":true,
