@@ -162,15 +162,37 @@ var updatePasswordStatus = function(){
     }
       passwordStatus.innerHTML = text;
 }
+var changeAppColor = function() {
+  var sheet, rules;
+  //Find the right stylesheet to modify
+  for (i = 0; i < document.styleSheets.length; i++) {
+    if (document.styleSheets[i].title == "global_styles") {
+      sheet = document.styleSheets[i];
+      break;
+    }
+  }
+  if (!sheet) {return;}
+  rules = sheet.cssRules;
+  for (j = 0; j < rules.length; j++) {
+    if (rules[j].selectorText == ":root") {
+      rules[j].style.setProperty("--global-color", "blue");
+      console.log(rules[j].style);
+      break;
+    }
+  }
+}
 document.addEventListener('DOMContentLoaded', function() {
 
+    // console.log(localStorage);
+    console.log(back.getCustomColor());
+    document.documentElement.style.setProperty('--global-color', back.getCustomColor());
 
-    var test = document.getElementById("resetcolorbutton");
-    test.onclick = function(){
-      // console.log(localStorage["customcolor"]);
+
+    var resetButton = document.getElementById("resetcolorbutton");
+    resetButton.onclick = function(){
       localStorage["customcolor"] = back.getDefaultValue("customcolor");
       document.getElementById("customcolor").value = localStorage["customcolor"];
-      // console.log(localStorage["customcolor"]);
+      changeAppColor();
     }
     
     document.getElementById("appiconandname").onclick = function(){ openTab("http://joaoapps.com/join");};
@@ -214,9 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
           alert("Password set.\n\nFor security reasons it will not show up here again.");
           updatePasswordStatus();
         };
-        workerKey.postMessage({userPassword:userPassword,salt:salt,iterations:5000});
-
-        
+        workerKey.postMessage({userPassword:userPassword,salt:salt,iterations:5000});        
       });
     }
     passwordResetButton.onclick = function(){

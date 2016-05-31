@@ -746,7 +746,7 @@ var getFavoriteCommandText = function(){
     return getOptionValue("text","text_favourite_command");
 }
 var getCustomColor = function(){
-    return getOptionValue("checkbox","customcolor");
+    return getOptionValue("color","customcolor");
 }
 var onautoclipboardsave = function(option, value){
     console.log("Auto clipboard: " + value);
