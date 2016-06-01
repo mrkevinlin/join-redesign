@@ -1,4 +1,4 @@
-# joinsms-redesign
+# join-redesign
 
 All credits to joaoapps for the extension: http://joaoapps.com/join/
 
