@@ -884,7 +884,7 @@ var setPopupIcon = function(alternative){
       }
 }
 document.addEventListener('DOMContentLoaded', function() {
-    var sheet, rules;
+    var sheet, rules, customColor, customColorLight, customColorFaded;
     //Find the right stylesheet to modify
     for (i = 0; i < document.styleSheets.length; i++) {
         console.log(document.styleSheets[i]);
@@ -897,9 +897,18 @@ document.addEventListener('DOMContentLoaded', function() {
     rules = sheet.cssRules;
     for (j = 0; j < rules.length; j++) {
         if (rules[j].selectorText == ":root") {
-          rules[j].style.setProperty("--global-color", back.getCustomColor());
-          console.log(back.getCustomColor());
-          break;
+            customColor = back.getCustomColor();
+            customColorLight = changeShade(hexToRGB(customColor), 30);
+            customColorFaded = changeShade(hexToRGB(customColor), 50);
+            rules[j].style.setProperty("--global-color", customColor);
+            break;
         }
+    }
+    function hexToRGB(hex) {
+        hex = (hex.charAt(0)=="#") ? hex.substring(1,7) : hex;
+        return [parseInt(hex.substring(0,2),16), parseInt(hex.substring(2,4),16), parseInt(hex.substring(4,6),16)];
+    }
+    function changeShade(values, factor) {
+
     }
 });
