@@ -906,7 +906,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 ccHSL = RGBToHSL(ccRGB);
                 ccLuminance = calcLuminance(ccRGB);
                 customColorLight = lighten(ccHSL, .4);
-                customColorFaded = desaturate(ccHSL, .4);
+                customColorFaded = lighten(ccHSL, .4);
+                // customColorFaded = desaturate(ccHSL, .4);
                 // console.log(customColorLight);
                 // console.log(customColorFaded);
                 rules[j].style.setProperty("--global-color", customColor);
