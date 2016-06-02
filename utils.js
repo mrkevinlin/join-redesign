@@ -905,9 +905,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 ccRGB = hexToRGB(customColor);
                 ccHSL = RGBToHSL(ccRGB);
                 ccLuminance = calcLuminance(ccRGB);
-                // customColorLight = lighten(ccHSL, .4);
-                // customColorFaded = lighten(ccHSL, 1);
+                customColorLight = lighten(ccHSL, .4);
+                customColorFaded = desaturate(ccHSL, .4);
+                // console.log(customColorLight);
+                // console.log(customColorFaded);
                 rules[j].style.setProperty("--global-color", customColor);
+                rules[j].style.setProperty("--global-color-light", customColorLight);
+                rules[j].style.setProperty("--global-color-faded", customColorFaded);
                 break;
             }
         }
@@ -916,7 +920,6 @@ document.addEventListener('DOMContentLoaded', function() {
             var rgb;
             hex = (hex.charAt(0)=="#") ? hex.substring(1,7) : hex;
             rgb = [parseInt(hex.substring(0,2),16), parseInt(hex.substring(2,4),16), parseInt(hex.substring(4,6),16)];
-            // console.log(rgb);
             return rgb;
         }
         //Convert from RGB values to HSL
@@ -957,10 +960,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // console.log(L);
             return L;
         }
-        // function lighten(values, factor) {
-        //     var l = values[2];
-        //     factor = (100 - l)*factor;
-        //     l = 
-        // }
+        function lighten(values, factor) {
+            var l = values[2];
+            factor = (100 - l)*factor;
+            l = Math.round(l + factor);
+            return "hsl("+values[0]+","+values[1]+"%,"+l+"%)";
+        }
+        function desaturate(values, factor) {
+            var s = values[1];
+            factor = s*factor;
+            s = Math.round(s - factor);
+            return "hsl("+values[0]+","+s+"%,"+values[2]+"%)";
+        }
     }
 });
