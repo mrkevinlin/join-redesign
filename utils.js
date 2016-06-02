@@ -884,31 +884,83 @@ var setPopupIcon = function(alternative){
       }
 }
 document.addEventListener('DOMContentLoaded', function() {
-    var sheet, rules, customColor, customColorLight, customColorFaded;
-    //Find the right stylesheet to modify
-    for (i = 0; i < document.styleSheets.length; i++) {
-        console.log(document.styleSheets[i]);
-        if (document.styleSheets[i].title == "global_style") {
-          sheet = document.styleSheets[i];
-          break;
+    colorChange();
+    function colorChange() {
+        var sheet, rules, customColor, ccRGB, ccHSL, ccLuminance, customColorLight, customColorFaded;
+        //Find the right stylesheet to modify
+        for (i = 0; i < document.styleSheets.length; i++) {
+            console.log(document.styleSheets[i]);
+            if (document.styleSheets[i].title == "global_style") {
+              sheet = document.styleSheets[i];
+              break;
+            }
         }
-    }
-    if (!sheet) {return;}
-    rules = sheet.cssRules;
-    for (j = 0; j < rules.length; j++) {
-        if (rules[j].selectorText == ":root") {
-            customColor = back.getCustomColor();
-            customColorLight = changeShade(hexToRGB(customColor), 30);
-            customColorFaded = changeShade(hexToRGB(customColor), 50);
-            rules[j].style.setProperty("--global-color", customColor);
-            break;
+        if (!sheet) {return;}
+        rules = sheet.cssRules;
+        //Find the root global variables
+        for (j = 0; j < rules.length; j++) {
+            if (rules[j].selectorText == ":root") {
+                customColor = back.getCustomColor();
+                // console.log(customColor);
+                ccRGB = hexToRGB(customColor);
+                ccHSL = RGBToHSL(ccRGB);
+                ccLuminance = calcLuminance(ccRGB);
+                // customColorLight = lighten(ccHSL, .4);
+                // customColorFaded = lighten(ccHSL, 1);
+                rules[j].style.setProperty("--global-color", customColor);
+                break;
+            }
         }
-    }
-    function hexToRGB(hex) {
-        hex = (hex.charAt(0)=="#") ? hex.substring(1,7) : hex;
-        return [parseInt(hex.substring(0,2),16), parseInt(hex.substring(2,4),16), parseInt(hex.substring(4,6),16)];
-    }
-    function changeShade(values, factor) {
-
+        //Convert from hex code to RGB values
+        function hexToRGB(hex) {
+            var rgb;
+            hex = (hex.charAt(0)=="#") ? hex.substring(1,7) : hex;
+            rgb = [parseInt(hex.substring(0,2),16), parseInt(hex.substring(2,4),16), parseInt(hex.substring(4,6),16)];
+            // console.log(rgb);
+            return rgb;
+        }
+        //Convert from RGB values to HSL
+        function RGBToHSL(values) {
+            var r, g, b, max, min, delta, h, s, l;
+            r = values[0]/255;
+            g = values[1]/255;
+            b = values[2]/255;
+            max = Math.max(r, g, b);
+            min = Math.min(r, g, b);
+            delta = max - min;
+            //Set hue value
+            if (max == r) {
+                h = 60 * (((g-b)/delta) % 6);
+            } else if (max == g) {
+                h = 60 * (((b-r)/delta) + 2);
+            } else if (max == b) {
+                h = 60 * (((r-g)/delta) + 4);
+            } else {
+                h = 0;
+            }
+            //Set lightnes value
+            l = (max+min)/2;
+            //Set saturation value
+            s = (delta == 0) ? 0 : delta / (1 - Math.abs((2*l) - 1));
+            console.log([Math.round(h), Math.round(s*100), Math.round(l*100)]);
+            return [Math.round(h), Math.round(s*100), Math.round(l*100)];
+        }
+        function calcLuminance(values) {
+            var r, g, b, L;
+            r = values[0]/255;
+            g = values[1]/255;
+            b = values[2]/255;
+            r = (r <= 0.03928) ? r/12.02 : Math.pow(((r+0.055)/1.055), 2.4);
+            g = (g <= 0.03928) ? g/12.02 : Math.pow(((g+0.055)/1.055), 2.4);
+            b = (b <= 0.03928) ? b/12.02 : Math.pow(((b+0.055)/1.055), 2.4);
+            L = (0.2126*r) + (0.7152*g) + (0.0722*b);
+            // console.log(L);
+            return L;
+        }
+        // function lighten(values, factor) {
+        //     var l = values[2];
+        //     factor = (100 - l)*factor;
+        //     l = 
+        // }
     }
 });
