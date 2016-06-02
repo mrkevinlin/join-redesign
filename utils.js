@@ -1,4 +1,3 @@
-
 /*************************CONSTANTS***********************/
 
 //var joinserverBase =  "http://192.168.1.67:8080/";
@@ -815,8 +814,7 @@ var getUserInfo = function(callback,force,token){
 	  callback(result);
     },function(error){
         console.log("Error: " + error); 
-    },token);
-  
+    },token); 
 }
 Date.prototype.customFormat = function(formatString){
     var YYYY,YY,MMMM,MMM,MM,M,DDDD,DDD,DD,D,hhhh,hhh,hh,h,mm,m,ss,s,ampm,AMPM,dMod,th;
@@ -878,7 +876,6 @@ function tintImage(image, color) {
     ctx.restore();
     image.src = canvas.toDataURL();
 }
-
 var setPopupIcon = function(alternative){
     if(alternative){
         chrome.browserAction.setIcon({"path":"/icons/alternative.png"});
@@ -886,6 +883,23 @@ var setPopupIcon = function(alternative){
         chrome.browserAction.setIcon({"path":"/small.png"});
       }
 }
-
-
-/***********************************************************/
+document.addEventListener('DOMContentLoaded', function() {
+    var sheet, rules;
+    //Find the right stylesheet to modify
+    for (i = 0; i < document.styleSheets.length; i++) {
+        console.log(document.styleSheets[i]);
+        if (document.styleSheets[i].title == "global_style") {
+          sheet = document.styleSheets[i];
+          break;
+        }
+    }
+    if (!sheet) {return;}
+    rules = sheet.cssRules;
+    for (j = 0; j < rules.length; j++) {
+        if (rules[j].selectorText == ":root") {
+          rules[j].style.setProperty("--global-color", back.getCustomColor());
+          console.log(back.getCustomColor());
+          break;
+        }
+    }
+});

@@ -162,31 +162,8 @@ var updatePasswordStatus = function(){
     }
       passwordStatus.innerHTML = text;
 }
-var changeAppColor = function() {
-  var sheet, rules;
-  //Find the right stylesheet to modify
-  for (i = 0; i < document.styleSheets.length; i++) {
-    if (document.styleSheets[i].title == "global_styles") {
-      sheet = document.styleSheets[i];
-      break;
-    }
-  }
-  if (!sheet) {return;}
-  rules = sheet.cssRules;
-  for (j = 0; j < rules.length; j++) {
-    if (rules[j].selectorText == ":root") {
-      rules[j].style.setProperty("--global-color", "blue");
-      console.log(rules[j].style);
-      break;
-    }
-  }
-}
 document.addEventListener('DOMContentLoaded', function() {
-
     // console.log(localStorage);
-    console.log(back.getCustomColor());
-    document.documentElement.style.setProperty('--global-color', back.getCustomColor());
-
 
     var resetButton = document.getElementById("resetcolorbutton");
     resetButton.onclick = function(){

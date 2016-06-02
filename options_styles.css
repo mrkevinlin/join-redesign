@@ -283,11 +283,8 @@ input[type='button'] {
   text-transform: uppercase;
   transition: all 0.3s ease;
 }
-input[type='button']#configure_keyboard_shortcuts {
+input[type='button']#resetcolorbutton, input[type='button']#configure_keyboard_shortcuts, input[type='button']#starttests {
   box-shadow: 0px 2px 6px -1px gray;
-}
-input[type='button']#starttests {
-  background-color: #E0E0E0;
 }
 input[type='button']:hover {
   box-shadow: 0px 2px 12px -2px gray !important;
