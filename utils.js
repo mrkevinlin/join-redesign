@@ -907,12 +907,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 ccLuminance = calcLuminance(ccRGB);
                 customColorLight = lighten(ccHSL, .4);
                 customColorFaded = lighten(ccHSL, .4);
+                //TODO: Come up with satisfactory color desaturation/other solution for text bubbles.
                 // customColorFaded = desaturate(ccHSL, .4);
                 // console.log(customColorLight);
                 // console.log(customColorFaded);
                 rules[j].style.setProperty("--global-color", customColor);
                 rules[j].style.setProperty("--global-color-light", customColorLight);
                 rules[j].style.setProperty("--global-color-faded", customColorFaded);
+
+                //TODO: Calculate contrast ratio (L1 + 0.05)/(L2+0.05), L1 is the lighter color. Black is 0, white is 1.
+                // Need at least 4.5 : 1 for good contrast. Change text colors appropriately.
+
                 break;
             }
         }
