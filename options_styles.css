@@ -47,7 +47,6 @@ h5 { color: #FF7A00; }
 	background-color: lightcoral;
 	padding: 10px;
 }
-<<<<<<< 6947659161a1a7b655490672f5325c996f480e14
 #devicesAutoClipboard {
   display: flex;
   position: relative;
@@ -100,34 +99,6 @@ h5 { color: #FF7A00; }
 #devicesAutoClipboard input[type='checkbox']:checked ~ div.clipboardDevice {
   background-color: var(--global-color);
   opacity: 1;
-||||||| merged common ancestors
-.androidDevice {
-	background-color: lightgreen;
-	padding: 10px;
-	margin: 4px;
-	display: inline-block;    
-	border: black;
-    border-width: 1px;
-    border-style: solid;
-}
-.androidDevice img {
-	width: 100px;
-	display: block;
-=======
-.androidDevice {
-	background-color: lightgreen;
-	padding: 10px;
-	margin: 4px;
-	display: inline-block;    
-	border: black;
-  border-width: 1px;
-  border-style: solid;
-}
-.androidDevice img {
-  height: 100px;
-	width: 100px;
-	display: block;
->>>>>>> Begin method to change app color and other code cleanup
 }
 #optionTabs {
   display: flex;
